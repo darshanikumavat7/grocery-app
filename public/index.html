@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gronery - Fresh Organic Groceries & Farm Produce</title>
+  <meta name="description" content="Order curated farm-fresh groceries, organic fruits, crisp vegetables, and pantry staples delivered in 30 minutes with Gronery.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Favicon SVG -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2316A34A'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z'/></svg>">
+</head>
+<body>
+
+  <!-- ADMIN MANAGEMENT TOPBAR (Toggled by Admin Mode switch) -->
+  <aside id="adminTopbar" class="admin-topbar hidden" aria-label="Store Admin Controls">
+    <div class="admin-topbar-left">
+      <span class="admin-badge">⚡ Admin Mode Active</span>
+      <div class="admin-topbar-stats">
+        <span class="stat-chip" id="statTotalProducts">📦 16 Products</span>
+        <span class="stat-chip" id="statTotalStock">📊 725 Units Total</span>
+        <span class="stat-chip alert" id="statLowStock">⚠️ 2 Low Stock</span>
+      </div>
+    </div>
+    <div class="admin-topbar-actions">
+      <button type="button" class="btn-admin-action" id="btnOpenAddModal">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+        Add New Grocery
+      </button>
+      <button type="button" class="btn-admin-outline" id="btnOpenInventoryTable">
+        📋 Inventory Table
+      </button>
+      <button type="button" class="btn-admin-outline" id="btnResetData">
+        🔄 Reset Catalog
+      </button>
+    </div>
+  </aside>
+
+  <!-- STICKY SITE HEADER & NAVIGATION -->
+  <header class="site-header" id="siteHeader">
+    <div class="container nav-container">
+      
+      <!-- Brand Logo -->
+      <a href="#home" class="brand-logo" id="brandLogo">
+        <div class="brand-icon-wrapper">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+          </svg>
+        </div>
+        <div class="brand-name">Gron<span>ery</span></div>
+      </a>
+
+      <!-- Navigation Tabs -->
+      <nav aria-label="Main Navigation">
+        <ul class="nav-links">
+          <li><a href="#home" class="nav-link active" data-nav="home">Home</a></li>
+          <li><a href="#categories" class="nav-link" data-nav="categories">Category</a></li>
+          <li><a href="#offers" class="nav-link" data-nav="offers">Offers</a></li>
+          <li><a href="#catalog" class="nav-link" data-nav="catalog">Selling Product</a></li>
+          <li><a href="#about" class="nav-link" data-nav="about">About Us</a></li>
+        </ul>
+      </nav>
+
+      <!-- Right Header Actions -->
+      <div class="nav-actions">
+        <!-- Live Instant Search Bar -->
+        <div class="nav-search-bar">
+          <svg class="nav-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" id="searchInput" class="nav-search-input" placeholder="Search groceries..." aria-label="Search groceries">
+        </div>
+
+        <!-- Favorites Button -->
+        <button type="button" class="action-btn" id="btnOpenFavorites" title="View Wishlist" aria-label="Wishlist">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          <span class="action-badge" id="favCountBadge">0</span>
+        </button>
+
+        <!-- Cart Button -->
+        <button type="button" class="cart-header-btn" id="btnOpenCart" aria-label="Open Shopping Cart">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+          <span id="cartCountBadge">0</span> Items
+        </button>
+
+        <!-- Admin Mode Toggle Switch -->
+        <div class="admin-toggle-wrapper" title="Switch between Storefront and Admin Mode">
+          <span class="admin-toggle-label">Admin</span>
+          <label class="admin-switch">
+            <input type="checkbox" id="adminToggle" aria-label="Toggle Store Admin Mode">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN APPLICATION CONTENT -->
+  <main id="mainContent">
+
+    <!-- HERO BANNER SECTION -->
+    <section class="hero-section" id="home">
+      <div class="container">
+        <div class="hero-card">
+          
+          <!-- Hero Text Content -->
+          <div class="hero-content">
+            <div class="hero-pill-badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+              100% Organic & Farm Picked Fresh Daily
+            </div>
+            
+            <h1 class="hero-title">
+              DELICIOUS SNACKS &amp; FRESH GROCERIES TO <span>CURB YOUR HUNGER</span>
+            </h1>
+
+            <p class="hero-description">
+              Carefully curated farm-crisp vegetables, sweet orchard fruits, artisan grains, and cold organic dairy delivered to your door in under 30 minutes.
+            </p>
+
+            <div class="hero-actions">
+              <a href="#catalog" class="btn-primary-shop" id="heroShopBtn">
+                Shop Now
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+              <a href="#offers" class="btn-secondary-deals">
+                View Weekly Offers
+              </a>
+            </div>
+
+            <div class="hero-perks">
+              <div class="perk-item">
+                <span class="perk-icon">⚡</span> 30 Min Express Delivery
+              </div>
+              <div class="perk-item">
+                <span class="perk-icon">🌱</span> 100% Certified Organic
+              </div>
+              <div class="perk-item">
+                <span class="perk-icon">⭐</span> 4.9/5 Customer Rating
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero Media Visual -->
+          <div class="hero-visual">
+            <div class="hero-img-wrap">
+              <img src="images/hero-basket.jpg" alt="Fresh wicker grocery basket overflowing with organic produce" loading="eager">
+              
+              <!-- Floating Discount Badge -->
+              <div class="hero-floating-badge">
+                <div class="floating-badge-icon">80%</div>
+                <div>
+                  <div class="floating-badge-title">Up to 80% OFF</div>
+                  <div class="floating-badge-sub">On Seasonal Organic Fruits</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- CATEGORY SELECTOR ("OUR POPULAR CATEGORIES") -->
+    <section class="categories-section" id="categories">
+      <div class="container">
+        
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <span class="section-eyebrow">Explore Fresh Aisles</span>
+            <h2 class="section-title">OUR POPULAR CATEGORIES</h2>
+          </div>
+          <span class="stat-chip" id="categoryActivePill" style="display: none;">All Categories</span>
+        </div>
+
+        <!-- Dynamic Category Cards Grid -->
+        <div class="categories-grid" id="categoriesGrid">
+          <!-- Populated dynamically via JS -->
+        </div>
+
+        <!-- Filter indicator bar if category is selected -->
+        <div class="category-filter-bar" id="categoryFilterBar" style="display: none;">
+          <span id="categoryFilterText">Showing items in category: <strong>Fruits</strong></span>
+          <button type="button" class="btn-clear-category" id="btnClearCategoryFilter">Show All Categories ✕</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PROMO BANNERS ("OUR SEASONAL OFFERS" / "WEEKLY HOT DEALS") -->
+    <section class="promo-section" id="offers">
+      <div class="container">
+        
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <span class="section-eyebrow">Special Discounts</span>
+            <h2 class="section-title">OUR SEASONAL OFFERS</h2>
+          </div>
+        </div>
+
+        <div class="promo-grid">
+          
+          <!-- Banner 1: Dark Green Banner ("BEST DEALS OF THE WEEK") -->
+          <div class="promo-banner dark-deal" style="background-image: url('images/deals-banner.jpg');">
+            <div class="promo-content">
+              <span class="promo-badge badge-deal-discount">UP TO 80% OFF</span>
+              <h3 class="promo-title">BEST DEALS OF THE WEEK</h3>
+              <p class="promo-sub">Fresh organic avocados, citrus limes, sweet asparagus &amp; kitchen herbs at harvest pricing.</p>
+            </div>
+            <div class="promo-footer">
+              <button type="button" class="btn-promo-action" id="btnClaimWeeklyDeal" data-filter="seasonal">
+                Claim Deal
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </button>
+              <div class="promo-timer" id="dealCountdown">
+                ⏳ <span id="dealTimer">18h : 42m : 15s</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Banner 2: Light Green Banner ("ORGANIC FRESH FOODS") -->
+          <div class="promo-banner light-deal" style="background-image: url('images/organic-banner.jpg');">
+            <div class="promo-content">
+              <span class="promo-badge badge-organic-deal">100% NATURAL</span>
+              <h3 class="promo-title">ORGANIC FRESH FOODS</h3>
+              <p class="promo-sub">Farm fresh whole milk, sweet mountain berries, and sun-ripened orchard oranges.</p>
+            </div>
+            <div class="promo-footer">
+              <button type="button" class="btn-promo-action" id="btnExploreOrganic" data-filter="best_sellers">
+                Explore Now
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </button>
+              <span class="promo-timer" style="background: rgba(255,255,255,0.7); color: #064E3B;">
+                🏷️ Code: <strong>FRESH80</strong>
+              </span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PRODUCT CATALOG ("OUR BEST SELLING PRODUCT") -->
+    <section class="catalog-section" id="catalog">
+      <div class="container">
+        
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <span class="section-eyebrow">Handpicked For You</span>
+            <h2 class="section-title">OUR BEST SELLING PRODUCT</h2>
+          </div>
+          <div id="catalogCount" style="font-weight: 700; color: var(--text-muted); font-size: 0.95rem;">
+            Showing 16 items
+          </div>
+        </div>
+
+        <!-- Filter Toolbar -->
+        <div class="catalog-toolbar">
+          <div class="filter-pills" id="filterPillsContainer">
+            <button type="button" class="filter-pill active" data-filter="all">All Items</button>
+            <button type="button" class="filter-pill" data-filter="best_sellers">🔥 Best Sellers</button>
+            <button type="button" class="filter-pill" data-filter="seasonal">🌿 Seasonal Offers</button>
+            <button type="button" class="filter-pill" data-filter="in_stock">✅ In Stock</button>
+            <button type="button" class="filter-pill badge-alert" data-filter="low_stock">⚠️ Low Stock (&le;10)</button>
+          </div>
+
+          <div class="catalog-actions-right">
+            <label for="sortSelector" style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">Sort By:</label>
+            <select id="sortSelector" class="sort-select" aria-label="Sort products">
+              <option value="default">Featured</option>
+              <option value="price_asc">Price: Low to High</option>
+              <option value="price_desc">Price: High to Low</option>
+              <option value="rating">Top Rated</option>
+              <option value="stock">Stock Quantity</option>
+              <option value="name">Product Name (A-Z)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Dynamic Product Cards Grid -->
+        <div class="products-grid" id="productsGrid">
+          <!-- Dynamically populated via JS -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section class="about-section" id="about" style="padding: 48px 0; background: #FFFFFF; border-top: 1px solid var(--border-light);">
+      <div class="container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;">
+        <div>
+          <span class="section-eyebrow">Our Promise</span>
+          <h2 class="section-title" style="margin-bottom: 16px;">Pure Farm Goodness Straight To Your Table</h2>
+          <p style="color: var(--text-muted); line-height: 1.7; margin-bottom: 20px;">
+            At Gronery, we partner directly with independent local eco-farmers and certified organic homesteads. Every harvest undergoes strict quality checks to guarantee peak crispness, zero harmful pesticides, and rich nutrients.
+          </p>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div style="background: var(--bg-surface); padding: 16px; border-radius: var(--radius-sm);">
+              <h4 style="font-weight: 800; font-size: 1.25rem; color: var(--primary-emerald);">100%</h4>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">Certified Organic &amp; Non-GMO</p>
+            </div>
+            <div style="background: var(--bg-surface); padding: 16px; border-radius: var(--radius-sm);">
+              <h4 style="font-weight: 800; font-size: 1.25rem; color: var(--primary-emerald);">30 Mins</h4>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">Cold-Chain Rapid Delivery</p>
+            </div>
+          </div>
+        </div>
+        <div style="border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-md);">
+          <img src="images/deals-banner.jpg" alt="Fresh farm produce harvest" style="width: 100%; height: 320px; object-fit: cover;">
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="brand-logo">
+            <div class="brand-icon-wrapper" style="width: 36px; height: 36px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/></svg>
+            </div>
+            <div class="brand-name">Gron<span>ery</span></div>
+          </div>
+          <p class="footer-brand-desc">
+            Your neighborhood modern organic grocery platform delivering peak freshness, artisan dairy, and farm produce to your family table.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Quick Aisles</h4>
+          <ul class="footer-links">
+            <li><a href="#catalog" class="footer-link" onclick="window.filterByCategory('Strawberry / Fruits')">Fresh Fruits</a></li>
+            <li><a href="#catalog" class="footer-link" onclick="window.filterByCategory('Vegetables')">Crisp Vegetables</a></li>
+            <li><a href="#catalog" class="footer-link" onclick="window.filterByCategory('Grains')">Artisan Grains</a></li>
+            <li><a href="#catalog" class="footer-link" onclick="window.filterByCategory('Dairy')">Farm Dairy &amp; Eggs</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Company</h4>
+          <ul class="footer-links">
+            <li><a href="#about" class="footer-link">About Gronery</a></li>
+            <li><a href="#offers" class="footer-link">Weekly Deals</a></li>
+            <li><a href="#home" class="footer-link">Sustainability</a></li>
+            <li><a href="#" class="footer-link" id="footerAdminLink">Store Management</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Join The Fresh Club</h4>
+          <p class="footer-newsletter-text">Subscribe to get weekly discount codes, recipes, and seasonal harvest drops.</p>
+          <form class="newsletter-form" onsubmit="event.preventDefault(); window.handleNewsletter();">
+            <input type="email" class="newsletter-input" placeholder="Your email address..." required aria-label="Email for newsletter">
+            <button type="submit" class="btn-newsletter">Join</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 Gronery Organic Supermarket. All rights reserved.</div>
+        <div style="display: flex; gap: 16px;">
+          <span>Privacy Policy</span>
+          <span>Terms of Service</span>
+          <span>Backend: SQLite + Express</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== SLIDE-OVER DRAWERS ==================== -->
+
+  <!-- Drawer Backdrop -->
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+
+  <!-- Cart Slide-Over Drawer -->
+  <aside class="slide-drawer" id="cartDrawer" aria-label="Shopping Cart">
+    <div class="drawer-header">
+      <div class="drawer-title-wrap">
+        <h3 class="drawer-title">Shopping Cart</h3>
+        <span class="drawer-badge" id="cartItemsCountText">0 Items</span>
+      </div>
+      <button type="button" class="btn-close-drawer" id="btnCloseCart" aria-label="Close cart">&times;</button>
+    </div>
+
+    <!-- Free Shipping Progress Tracker -->
+    <div class="shipping-tracker">
+      <div class="shipping-text">
+        <span id="shippingProgressText">Add $35.00 for FREE Delivery</span>
+        <span id="shippingProgressAmount">$0.00 / $35.00</span>
+      </div>
+      <div class="shipping-progress-track">
+        <div class="shipping-progress-fill" id="shippingProgressFill" style="width: 0%;"></div>
+      </div>
+    </div>
+
+    <!-- Cart Items Scroll List -->
+    <div class="drawer-items-list" id="cartItemsList">
+      <!-- Populated dynamically -->
+    </div>
+
+    <!-- Cart Footer & Checkout -->
+    <div class="drawer-footer" id="cartDrawerFooter">
+      <div class="promo-input-row">
+        <input type="text" id="promoCodeInput" class="promo-input" placeholder="Promo code (try FRESH80)">
+        <button type="button" class="btn-apply-coupon" id="btnApplyCoupon">Apply</button>
+      </div>
+
+      <div class="summary-line">
+        <span>Subtotal</span>
+        <span id="cartSubtotal">$0.00</span>
+      </div>
+      <div class="summary-line">
+        <span>Estimated Delivery</span>
+        <span id="cartDelivery">$3.99</span>
+      </div>
+      <div class="summary-line" id="discountRow" style="display: none; color: #16A34A;">
+        <span>Promo Discount</span>
+        <span id="cartDiscount">-$0.00</span>
+      </div>
+      <div class="summary-line">
+        <span>Estimated Tax (5%)</span>
+        <span id="cartTax">$0.00</span>
+      </div>
+      <div class="summary-line total">
+        <span>Order Total</span>
+        <span id="cartFinalTotal">$0.00</span>
+      </div>
+
+      <button type="button" class="btn-checkout" id="btnProceedCheckout">
+        Proceed to Checkout
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Favorites Wishlist Slide-Over Drawer -->
+  <aside class="slide-drawer" id="favoritesDrawer" aria-label="Favorite Items">
+    <div class="drawer-header">
+      <div class="drawer-title-wrap">
+        <h3 class="drawer-title">Saved Favorites</h3>
+        <span class="drawer-badge" id="favDrawerCount">0 Items</span>
+      </div>
+      <button type="button" class="btn-close-drawer" id="btnCloseFavorites" aria-label="Close wishlist">&times;</button>
+    </div>
+
+    <div class="drawer-items-list" id="favoritesItemsList">
+      <!-- Populated dynamically -->
+    </div>
+
+    <div class="drawer-footer" id="favDrawerFooter" style="display: none;">
+      <button type="button" class="btn-checkout" id="btnAddAllFavoritesToCart">
+        🛒 Move All Favorites to Cart
+      </button>
+    </div>
+  </aside>
+
+  <!-- ==================== MODALS ==================== -->
+
+  <!-- Add / Edit Grocery Item Modal Form -->
+  <div class="modal-backdrop" id="groceryItemModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title" id="groceryModalTitle">Add New Grocery Item</h3>
+        <button type="button" class="btn-close-drawer" id="btnCloseGroceryModal">&times;</button>
+      </div>
+
+      <form id="groceryForm">
+        <input type="hidden" id="formItemId">
+        <div class="modal-body">
+          <div class="form-grid">
+            
+            <div class="form-group full-width">
+              <label class="form-label" for="formName">Item Name *</label>
+              <input type="text" id="formName" class="form-input" placeholder="e.g. Organic Strawberry" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="formCategory">Category *</label>
+              <select id="formCategory" class="form-select" required>
+                <option value="Strawberry / Fruits">Strawberry / Fruits</option>
+                <option value="Apple">Apple</option>
+                <option value="Orange">Orange</option>
+                <option value="Vegetables">Vegetables</option>
+                <option value="Carrot">Carrot</option>
+                <option value="Potato">Potato</option>
+                <option value="Grains">Grains</option>
+                <option value="Dairy">Dairy</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="formUnit">Unit *</label>
+              <input type="text" id="formUnit" class="form-input" placeholder="e.g. per kg, per pack, per liter" value="per kg" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="formPrice">Price ($) *</label>
+              <input type="number" id="formPrice" class="form-input" placeholder="12.00" step="0.01" min="0.01" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="formOriginalPrice">Original / Compare Price ($)</label>
+              <input type="number" id="formOriginalPrice" class="form-input" placeholder="15.00" step="0.01" min="0">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="formStock">Stock Quantity *</label>
+              <input type="number" id="formStock" class="form-input" placeholder="45" min="0" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="formRating">Rating (1.0 - 5.0)</label>
+              <input type="number" id="formRating" class="form-input" placeholder="4.9" step="0.1" min="1.0" max="5.0" value="4.9">
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label" for="formImageUrl">Image URL *</label>
+              <input type="url" id="formImageUrl" class="form-input" placeholder="https://images.unsplash.com/..." required>
+              <div style="margin-top: 6px; display: flex; gap: 8px; flex-wrap: wrap;">
+                <span style="font-size: 0.75rem; color: var(--text-muted);">Quick presets:</span>
+                <button type="button" class="btn-admin-outline" style="font-size: 0.7rem; color: #064E3B; background: #DCFCE7; border: none; padding: 2px 8px;" onclick="document.getElementById('formImageUrl').value='https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=600&q=80'">🍓 Strawberry</button>
+                <button type="button" class="btn-admin-outline" style="font-size: 0.7rem; color: #064E3B; background: #DCFCE7; border: none; padding: 2px 8px;" onclick="document.getElementById('formImageUrl').value='https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=600&q=80'">🍎 Apple</button>
+                <button type="button" class="btn-admin-outline" style="font-size: 0.7rem; color: #064E3B; background: #DCFCE7; border: none; padding: 2px 8px;" onclick="document.getElementById('formImageUrl').value='https://images.unsplash.com/photo-1547514701-42782101795e?auto=format&fit=crop&w=600&q=80'">🍊 Orange</button>
+                <button type="button" class="btn-admin-outline" style="font-size: 0.7rem; color: #064E3B; background: #DCFCE7; border: none; padding: 2px 8px;" onclick="document.getElementById('formImageUrl').value='https://images.unsplash.com/photo-1598170845058-32b9d6a5c317?auto=format&fit=crop&w=600&q=80'">🥕 Carrot</button>
+                <button type="button" class="btn-admin-outline" style="font-size: 0.7rem; color: #064E3B; background: #DCFCE7; border: none; padding: 2px 8px;" onclick="document.getElementById('formImageUrl').value='https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=600&q=80'">🥔 Potato</button>
+                <button type="button" class="btn-admin-outline" style="font-size: 0.7rem; color: #064E3B; background: #DCFCE7; border: none; padding: 2px 8px;" onclick="document.getElementById('formImageUrl').value='https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80'">🥛 Milk</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="formBadge">Highlight Badge</label>
+              <input type="text" id="formBadge" class="form-input" placeholder="e.g. BESTSELLER, ORGANIC, FRESH">
+            </div>
+
+            <div class="form-group" style="justify-content: center; gap: 12px;">
+              <label class="checkbox-group">
+                <input type="checkbox" id="formIsBestSeller">
+                <span>Mark as Best Seller</span>
+              </label>
+              <label class="checkbox-group">
+                <input type="checkbox" id="formIsSeasonal">
+                <span>Mark as Seasonal Offer</span>
+              </label>
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label" for="formDescription">Description</label>
+              <textarea id="formDescription" class="form-textarea" rows="2" placeholder="Brief freshness description, nutritional benefits..."></textarea>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="btnCancelGroceryModal">Cancel</button>
+          <button type="submit" class="btn-submit-save" id="btnSaveGrocery">Save Item</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin Inventory Management Modal (Full Spreadsheet) -->
+  <div class="modal-backdrop" id="inventoryTableModal">
+    <div class="modal-box inventory-modal-box">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <h3 class="modal-title">Inventory &amp; Stock Management</h3>
+          <span class="stat-chip" id="invTotalBadge">16 Items</span>
+        </div>
+        <button type="button" class="btn-close-drawer" id="btnCloseInventoryModal">&times;</button>
+      </div>
+
+      <div class="modal-body" style="padding-top: 16px;">
+        <!-- Search and Quick Filter within Inventory Modal -->
+        <div style="display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+          <input type="text" id="invSearchInput" class="form-input" placeholder="Search inventory table..." style="max-width: 280px;">
+          <div style="display: flex; gap: 8px;">
+            <button type="button" class="filter-pill active" id="btnInvFilterAll">All Items</button>
+            <button type="button" class="filter-pill badge-alert" id="btnInvFilterLow">⚠️ Low Stock Only</button>
+          </div>
+        </div>
+
+        <div class="inventory-table-wrap">
+          <table class="inventory-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Price / Unit</th>
+                <th>Stock Level</th>
+                <th>Quick Adjust</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="inventoryTableBody">
+              <!-- Dynamically populated rows -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-admin-action" id="btnInvAddNew">
+          + Add New Item
+        </button>
+        <button type="button" class="btn-secondary" id="btnCloseInvFooter">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout Celebration / Order Success Modal -->
+  <div class="modal-backdrop" id="checkoutSuccessModal">
+    <div class="modal-box" style="max-width: 480px; text-align: center; padding: 36px 24px;">
+      <div style="width: 72px; height: 72px; background: #DCFCE7; color: #16A34A; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 2.2rem;">
+        ✓
+      </div>
+      <h3 style="font-family: var(--font-heading); font-size: 1.6rem; font-weight: 800; margin-bottom: 8px;">Order Placed Successfully!</h3>
+      <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 24px;">
+        Thank you for shopping at Gronery! Your organic groceries are being handpicked and will be delivered in under <strong>28 minutes</strong>.
+      </p>
+      
+      <div style="background: #F8FAFC; border: 1px dashed var(--border-light); border-radius: var(--radius-md); padding: 18px; text-align: left; margin-bottom: 24px;">
+        <div style="display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 8px;">
+          <span>Order #GRN-<span id="successOrderNum">8942</span></span>
+          <span style="color: #16A34A;">Confirmed</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 4px;">
+          <span>Items Ordered:</span>
+          <span id="successItemCount">3 items</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 0.95rem; font-weight: 800; border-top: 1px solid var(--border-light); padding-top: 8px; margin-top: 8px;">
+          <span>Total Paid:</span>
+          <span id="successOrderTotal" style="color: var(--primary-emerald);">$0.00</span>
+        </div>
+      </div>
+
+      <button type="button" class="btn-checkout" id="btnCloseSuccessModal">
+        Continue Shopping
+      </button>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- Main JavaScript Application Logic -->
+  <script src="app.js"></script>
+</body>
+</html>
