@@ -136,15 +136,29 @@ app.put('/api/items/:id', handleUpdateGrocery);
 
 /**
  * PATCH /api/groceries/:id/stock and /api/items/:id/stock
- * Rapid stock adjuster for Admin mode (+1 or -1 or custom delta)
+ * Rapid stock adjuster for Admin mode (+1 or -1 or direct stockQuantity)
  */
 const handleAdjustStock = (req, res) => {
   try {
-    const delta = parseInt(req.body.delta, 10);
-    if (isNaN(delta)) {
-      return res.status(400).json({ success: false, error: 'Valid delta integer required' });
+    const { delta, stockQuantity, quantity } = req.body;
+    let updated;
+
+    if (stockQuantity !== undefined || quantity !== undefined) {
+      const targetQty = stockQuantity !== undefined ? parseInt(stockQuantity, 10) : parseInt(quantity, 10);
+      if (isNaN(targetQty) || targetQty < 0) {
+        return res.status(400).json({ success: false, error: 'Valid non-negative stock quantity required' });
+      }
+      updated = db.setStock(req.params.id, targetQty);
+    } else if (delta !== undefined) {
+      const d = parseInt(delta, 10);
+      if (isNaN(d)) {
+        return res.status(400).json({ success: false, error: 'Valid delta integer required' });
+      }
+      updated = db.adjustStock(req.params.id, d);
+    } else {
+      return res.status(400).json({ success: false, error: 'Either delta or stockQuantity is required' });
     }
-    const updated = db.adjustStock(req.params.id, delta);
+
     if (!updated) {
       return res.status(404).json({ success: false, error: 'Item not found' });
     }
@@ -161,6 +175,8 @@ const handleAdjustStock = (req, res) => {
 
 app.patch('/api/groceries/:id/stock', handleAdjustStock);
 app.patch('/api/items/:id/stock', handleAdjustStock);
+app.patch('/api/groceries/:id', handleUpdateGrocery);
+app.patch('/api/items/:id', handleUpdateGrocery);
 
 /**
  * DELETE /api/groceries/:id and /api/items/:id

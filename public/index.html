@@ -489,6 +489,7 @@
               <label class="form-label" for="formCategory">Category *</label>
               <select id="formCategory" class="form-select" required>
                 <option value="Strawberry / Fruits">Strawberry / Fruits</option>
+                <option value="Fruits">Fruits</option>
                 <option value="Apple">Apple</option>
                 <option value="Orange">Orange</option>
                 <option value="Vegetables">Vegetables</option>
@@ -496,12 +497,14 @@
                 <option value="Potato">Potato</option>
                 <option value="Grains">Grains</option>
                 <option value="Dairy">Dairy</option>
+                <option value="Bakery">Bakery</option>
+                <option value="Pantry">Pantry</option>
               </select>
             </div>
 
             <div class="form-group">
               <label class="form-label" for="formUnit">Unit *</label>
-              <input type="text" id="formUnit" class="form-input" placeholder="e.g. per kg, per pack, per liter" value="per kg" required>
+              <input type="text" id="formUnit" class="form-input" placeholder="e.g. kg, liter, bunch, pack, dozen" value="kg" required>
             </div>
 
             <div class="form-group">
@@ -517,6 +520,11 @@
             <div class="form-group">
               <label class="form-label" for="formStock">Stock Quantity *</label>
               <input type="number" id="formStock" class="form-input" placeholder="45" min="0" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="formLowStockAlert">Low Stock Alert Level *</label>
+              <input type="number" id="formLowStockAlert" class="form-input" placeholder="10" min="0" value="10" required>
             </div>
 
             <div class="form-group">

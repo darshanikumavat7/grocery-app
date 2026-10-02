@@ -42,13 +42,14 @@ const CATEGORY_CONFIG = [
 // ==================== MOCK GROCERY DATASET & FALLBACKS ====================
 const MOCK_GROCERIES = [
   {
-    id: "mock-1",
-    name: "Organic Strawberry",
+    id: "item-1-strawberry",
+    name: "Organic Strawberries",
     category: "Strawberry / Fruits",
     price: 12.00,
     originalPrice: 15.00,
-    unit: "per kg",
+    unit: "kg",
     stockQuantity: 45,
+    lowStockAlert: 10,
     inStock: true,
     imageUrl: "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=600&q=80",
     rating: 4.9,
@@ -59,13 +60,14 @@ const MOCK_GROCERIES = [
     description: "Sweet, juicy organic strawberries freshly picked from local eco-farms. Packed with antioxidants and vitamin C."
   },
   {
-    id: "mock-2",
+    id: "item-2-apple",
     name: "Honeycrisp Fresh Apples",
     category: "Apple",
     price: 4.50,
     originalPrice: 6.00,
-    unit: "per kg",
+    unit: "kg",
     stockQuantity: 88,
+    lowStockAlert: 15,
     inStock: true,
     imageUrl: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=600&q=80",
     rating: 4.8,
@@ -76,13 +78,14 @@ const MOCK_GROCERIES = [
     description: "Crisp, sweet, and bursting with cider-like crunch. Ideal for snacking, baking, and fresh salads."
   },
   {
-    id: "mock-3",
+    id: "item-3-orange",
     name: "Sweet Valencia Oranges",
     category: "Orange",
     price: 3.80,
     originalPrice: 4.90,
-    unit: "per kg",
+    unit: "kg",
     stockQuantity: 32,
+    lowStockAlert: 10,
     inStock: true,
     imageUrl: "https://images.unsplash.com/photo-1547514701-42782101795e?auto=format&fit=crop&w=600&q=80",
     rating: 4.7,
@@ -93,13 +96,14 @@ const MOCK_GROCERIES = [
     description: "Sun-ripened Valencia oranges loaded with natural sweetness and high juice yield for daily morning hydration."
   },
   {
-    id: "mock-4",
+    id: "item-4-carrot",
     name: "Crisp Organic Carrots",
     category: "Carrot",
     price: 2.50,
     originalPrice: 3.20,
-    unit: "per bunch",
+    unit: "bunch",
     stockQuantity: 60,
+    lowStockAlert: 12,
     inStock: true,
     imageUrl: "https://images.unsplash.com/photo-1598170845058-32b9d6a5c317?auto=format&fit=crop&w=600&q=80",
     rating: 4.9,
@@ -110,13 +114,14 @@ const MOCK_GROCERIES = [
     description: "Crunchy, sweet farm carrots with healthy greens attached. Rich in beta-carotene and essential vitamins."
   },
   {
-    id: "mock-5",
+    id: "item-5-potato",
     name: "Farm Russet Potatoes",
     category: "Potato",
     price: 3.20,
     originalPrice: 4.00,
-    unit: "per kg",
+    unit: "kg",
     stockQuantity: 115,
+    lowStockAlert: 20,
     inStock: true,
     imageUrl: "https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=600&q=80",
     rating: 4.6,
@@ -127,13 +132,14 @@ const MOCK_GROCERIES = [
     description: "Hearty, starchy russet potatoes suitable for fluffy mashed potatoes, roasting, or homemade french fries."
   },
   {
-    id: "mock-6",
+    id: "item-6-onion",
     name: "Organic Golden Onions",
     category: "Grains",
     price: 2.90,
     originalPrice: 3.50,
-    unit: "per kg",
+    unit: "kg",
     stockQuantity: 74,
+    lowStockAlert: 15,
     inStock: true,
     imageUrl: "https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=600&q=80",
     rating: 4.7,
@@ -144,13 +150,14 @@ const MOCK_GROCERIES = [
     description: "Fragrant yellow sweet onions, foundational aromatic for stews, stir fries, roasts, and savory dishes."
   },
   {
-    id: "mock-7",
-    name: "Artisan Whole Rolled Oats & Grains",
+    id: "item-7-oats",
+    name: "Artisan Whole Rolled Oats",
     category: "Grains",
     price: 5.40,
     originalPrice: 6.80,
-    unit: "per pack",
+    unit: "pack",
     stockQuantity: 40,
+    lowStockAlert: 10,
     inStock: true,
     imageUrl: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80",
     rating: 4.8,
@@ -161,13 +168,14 @@ const MOCK_GROCERIES = [
     description: "Stone-milled whole oats and mixed multi-grains. High in dietary fiber, low GI, and heart-healthy."
   },
   {
-    id: "mock-8",
+    id: "item-8-broccoli",
     name: "Fresh Broccoli Crowns",
     category: "Vegetables",
     price: 3.50,
     originalPrice: 4.50,
-    unit: "per bunch",
+    unit: "bunch",
     stockQuantity: 28,
+    lowStockAlert: 8,
     inStock: true,
     imageUrl: "https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?auto=format&fit=crop&w=600&q=80",
     rating: 4.8,
@@ -178,13 +186,14 @@ const MOCK_GROCERIES = [
     description: "Tender, vibrant green florets loaded with vitamins K and C. Harvested cold to preserve maximum crispness."
   },
   {
-    id: "mock-9",
+    id: "item-9-milk",
     name: "Organic Pasture Whole Milk",
     category: "Dairy",
     price: 4.20,
     originalPrice: 5.00,
-    unit: "per liter",
+    unit: "liter",
     stockQuantity: 52,
+    lowStockAlert: 10,
     inStock: true,
     imageUrl: "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80",
     rating: 4.9,
@@ -195,13 +204,14 @@ const MOCK_GROCERIES = [
     description: "Pasteurized, non-homogenized whole milk from grass-fed cows. Creamy, nutrient dense, and clean."
   },
   {
-    id: "mock-10",
+    id: "item-10-avocado",
     name: "Ripe Hass Avocados",
     category: "Vegetables",
     price: 6.00,
     originalPrice: 8.00,
-    unit: "per pack (3 pcs)",
+    unit: "pack (3 pcs)",
     stockQuantity: 6,
+    lowStockAlert: 10,
     inStock: true,
     imageUrl: "https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?auto=format&fit=crop&w=600&q=80",
     rating: 5.0,
@@ -212,13 +222,14 @@ const MOCK_GROCERIES = [
     description: "Buttery, rich Hass avocados with dark pebbled skin. Perfect for guacamole, toasts, and salads."
   },
   {
-    id: "mock-11",
+    id: "item-11-spinach",
     name: "Tender Baby Spinach",
     category: "Vegetables",
     price: 3.90,
     originalPrice: 4.80,
-    unit: "per pack",
+    unit: "pack",
     stockQuantity: 4,
+    lowStockAlert: 10,
     inStock: true,
     imageUrl: "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=600&q=80",
     rating: 4.8,
@@ -229,13 +240,14 @@ const MOCK_GROCERIES = [
     description: "Pre-washed tender baby spinach leaves. Mild, sweet flavor ideal for green smoothies or sautéing."
   },
   {
-    id: "mock-12",
+    id: "item-12-blueberries",
     name: "Wild Mountain Blueberries",
     category: "Strawberry / Fruits",
     price: 5.80,
     originalPrice: 7.20,
-    unit: "per pack",
+    unit: "pack",
     stockQuantity: 35,
+    lowStockAlert: 10,
     inStock: true,
     imageUrl: "https://images.unsplash.com/photo-1498557850523-fd3d118b962e?auto=format&fit=crop&w=600&q=80",
     rating: 4.9,
@@ -246,13 +258,14 @@ const MOCK_GROCERIES = [
     description: "Plump, deep blue berries with a natural bloom. Bursting with sweet-tart natural flavor."
   },
   {
-    id: "mock-13",
+    id: "item-13-eggs",
     name: "Free-Range Farm Eggs",
     category: "Dairy",
     price: 5.20,
     originalPrice: 6.00,
-    unit: "per dozen",
+    unit: "dozen",
     stockQuantity: 64,
+    lowStockAlert: 12,
     inStock: true,
     imageUrl: "https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?auto=format&fit=crop&w=600&q=80",
     rating: 4.9,
@@ -263,13 +276,14 @@ const MOCK_GROCERIES = [
     description: "Grade-A large brown eggs from pasture-raised hens with bright golden yolks and firm whites."
   },
   {
-    id: "mock-14",
+    id: "item-14-tomatoes",
     name: "Sweet Vine Cherry Tomatoes",
     category: "Vegetables",
     price: 3.40,
     originalPrice: 4.20,
-    unit: "per pack",
+    unit: "pack",
     stockQuantity: 42,
+    lowStockAlert: 10,
     inStock: true,
     imageUrl: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=600&q=80",
     rating: 4.7,
@@ -280,13 +294,14 @@ const MOCK_GROCERIES = [
     description: "Clusters of vibrant red vine tomatoes with concentrated sun sweetness and snappy thin skins."
   },
   {
-    id: "mock-15",
+    id: "item-15-sourdough",
     name: "Artisanal Sourdough Loaf",
     category: "Grains",
     price: 6.50,
     originalPrice: 7.50,
-    unit: "per loaf",
+    unit: "loaf",
     stockQuantity: 18,
+    lowStockAlert: 8,
     inStock: true,
     imageUrl: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80",
     rating: 5.0,
@@ -295,23 +310,6 @@ const MOCK_GROCERIES = [
     isSeasonal: false,
     badge: "ARTISAN",
     description: "36-hour slow-fermented crusty sourdough bread made with organic unbleached wheat flour and spring water."
-  },
-  {
-    id: "mock-16",
-    name: "Cold-Pressed Extra Virgin Olive Oil",
-    category: "Grains",
-    price: 14.50,
-    originalPrice: 18.00,
-    unit: "per bottle (500ml)",
-    stockQuantity: 22,
-    inStock: true,
-    imageUrl: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=600&q=80",
-    rating: 4.9,
-    reviewsCount: 82,
-    isBestSeller: true,
-    isSeasonal: false,
-    badge: "PREMIUM",
-    description: "Single-estate early-harvest extra virgin olive oil with peppery finish and high polyphenol content."
   }
 ];
 
@@ -349,7 +347,10 @@ function getFilteredMockGroceries(category = null, filter = null, search = null,
   if (filterStr === 'in_stock' || filterStr === 'instock') {
     items = items.filter(i => i.inStock && i.stockQuantity > 0);
   } else if (filterStr === 'low_stock' || filterStr === 'lowstock') {
-    items = items.filter(i => i.inStock && i.stockQuantity <= 10 && i.stockQuantity > 0);
+    items = items.filter(i => {
+      const alert = i.lowStockAlert !== undefined ? i.lowStockAlert : 10;
+      return i.inStock && i.stockQuantity <= alert && i.stockQuantity > 0;
+    });
   } else if (filterStr === 'out_of_stock' || filterStr === 'outofstock') {
     items = items.filter(i => !i.inStock || i.stockQuantity <= 0);
   }
@@ -395,7 +396,10 @@ function getMockCategoriesWithCounts() {
 
 function getMockStats() {
   const total = MOCK_GROCERIES.length;
-  const lowStock = MOCK_GROCERIES.filter(i => i.inStock && i.stockQuantity <= 10 && i.stockQuantity > 0).length;
+  const lowStock = MOCK_GROCERIES.filter(i => {
+    const alert = i.lowStockAlert !== undefined ? i.lowStockAlert : 10;
+    return i.inStock && i.stockQuantity <= alert && i.stockQuantity > 0;
+  }).length;
   const outOfStock = MOCK_GROCERIES.filter(i => !i.inStock || i.stockQuantity <= 0).length;
   const totalStockQuantity = MOCK_GROCERIES.reduce((sum, i) => sum + i.stockQuantity, 0);
   const bestSellers = MOCK_GROCERIES.filter(i => i.isBestSeller).length;
@@ -483,6 +487,7 @@ const elements = {
   formPrice: document.getElementById('formPrice'),
   formOriginalPrice: document.getElementById('formOriginalPrice'),
   formStock: document.getElementById('formStock'),
+  formLowStockAlert: document.getElementById('formLowStockAlert'),
   formRating: document.getElementById('formRating'),
   formImageUrl: document.getElementById('formImageUrl'),
   formBadge: document.getElementById('formBadge'),
@@ -790,7 +795,8 @@ function renderProducts() {
   elements.productsGrid.innerHTML = state.groceries.map(item => {
     const isFav = state.favorites.includes(item.id);
     const inStock = item.inStock && item.stockQuantity > 0;
-    const isLowStock = inStock && item.stockQuantity <= 10;
+    const alertLevel = item.lowStockAlert !== undefined ? item.lowStockAlert : 10;
+    const isLowStock = inStock && item.stockQuantity <= alertLevel;
 
     // Badges logic
     let badgeHtml = '';
@@ -1059,7 +1065,10 @@ function renderInventoryTable(filterTerm = '', showLowOnly = false) {
   }
 
   if (showLowOnly) {
-    items = items.filter(i => i.stockQuantity <= 10);
+    items = items.filter(i => {
+      const alert = i.lowStockAlert !== undefined ? i.lowStockAlert : 10;
+      return i.inStock && i.stockQuantity <= alert && i.stockQuantity > 0;
+    });
   }
 
   if (items.length === 0) {
@@ -1075,7 +1084,8 @@ function renderInventoryTable(filterTerm = '', showLowOnly = false) {
 
   elements.inventoryTableBody.innerHTML = items.map(item => {
     const inStock = item.inStock && item.stockQuantity > 0;
-    const isLow = inStock && item.stockQuantity <= 10;
+    const alertLevel = item.lowStockAlert !== undefined ? item.lowStockAlert : 10;
+    const isLow = inStock && item.stockQuantity <= alertLevel;
     let statusPill = `<span class="stock-status-pill in-stock"><span class="stock-dot"></span> In Stock</span>`;
     if (!inStock) {
       statusPill = `<span class="stock-status-pill out-of-stock"><span class="stock-dot"></span> Out</span>`;
@@ -1435,34 +1445,81 @@ window.toggleFavorite = function(itemId) {
 
 // ==================== ADMIN STOCK & CRUD ACTIONS ====================
 
-// Quick stock adjust directly from card or table
+// Quick stock adjust directly from card or table with instant optimistic UI update
 window.adjustItemStock = async function(id, delta) {
+  const item = state.groceries.find(g => g.id === id);
+  if (!item) return;
+
+  const previousStock = item.stockQuantity;
+  const previousInStock = item.inStock;
+  const previousIsLow = item.isLowStock;
+  const nextStock = Math.max(0, item.stockQuantity + delta);
+
+  // 1. Instant optimistic UI update
+  item.stockQuantity = nextStock;
+  item.inStock = nextStock > 0;
+  const alertLevel = item.lowStockAlert !== undefined ? item.lowStockAlert : 10;
+  item.isLowStock = nextStock > 0 && nextStock <= alertLevel;
+
+  // Immediate DOM stepper feedback
+  const stepperSpan = document.getElementById(`stock-val-${id}`);
+  if (stepperSpan) stepperSpan.textContent = nextStock;
+
+  // Re-render UI immediately
+  renderProducts();
+  if (elements.inventoryTableModal && elements.inventoryTableModal.classList.contains('open')) {
+    const isLow = elements.btnInvFilterLow.classList.contains('active');
+    renderInventoryTable(elements.invSearchInput.value, isLow);
+  }
+
+  // Optimistic admin stats
+  state.stats.totalStockQuantity = state.groceries.reduce((sum, g) => sum + g.stockQuantity, 0);
+  state.stats.lowStockCount = state.groceries.filter(g => {
+    const a = g.lowStockAlert !== undefined ? g.lowStockAlert : 10;
+    return g.inStock && g.stockQuantity <= a && g.stockQuantity > 0;
+  }).length;
+  state.stats.outOfStockCount = state.groceries.filter(g => !g.inStock || g.stockQuantity <= 0).length;
+  renderAdminStats();
+
+  // 2. Persist to Backend API
   try {
     const res = await API.adjustStock(id, delta);
-    if (res.success) {
-      // Update local item
-      const item = state.groceries.find(g => g.id === id);
-      if (item) {
-        item.stockQuantity = res.data.stockQuantity;
-        item.inStock = res.data.inStock;
-      }
-      // Re-fetch stats
+    if (res.success && res.data) {
+      item.stockQuantity = res.data.stockQuantity;
+      item.inStock = res.data.inStock;
+      if (res.data.lowStockAlert !== undefined) item.lowStockAlert = res.data.lowStockAlert;
+      if (res.data.isLowStock !== undefined) item.isLowStock = res.data.isLowStock;
+
+      // Re-fetch authoritative stats from backend
       const statsRes = await API.getStats();
       if (statsRes.success) state.stats = statsRes.data;
 
       renderProducts();
       renderAdminStats();
-      
-      // If inventory table is open, refresh it
-      if (elements.inventoryTableModal.classList.contains('open')) {
+
+      if (elements.inventoryTableModal && elements.inventoryTableModal.classList.contains('open')) {
         const isLow = elements.btnInvFilterLow.classList.contains('active');
         renderInventoryTable(elements.invSearchInput.value, isLow);
       }
 
       showToast(`Stock updated: ${res.data.name} is now ${res.data.stockQuantity}`, 'info');
+    } else {
+      // Rollback on failure
+      item.stockQuantity = previousStock;
+      item.inStock = previousInStock;
+      item.isLowStock = previousIsLow;
+      renderProducts();
+      renderAdminStats();
+      showToast(res.error || 'Failed to update stock on server', 'warning');
     }
   } catch (err) {
-    showToast('Failed to update stock', 'warning');
+    // Rollback on network error
+    item.stockQuantity = previousStock;
+    item.inStock = previousInStock;
+    item.isLowStock = previousIsLow;
+    renderProducts();
+    renderAdminStats();
+    showToast('Network error while updating stock', 'warning');
   }
 };
 
@@ -1472,7 +1529,10 @@ window.openAddModal = function() {
   elements.formItemId.value = '';
   elements.groceryForm.reset();
   elements.formRating.value = '4.9';
-  elements.formUnit.value = 'per kg';
+  elements.formUnit.value = 'kg';
+  if (elements.formLowStockAlert) {
+    elements.formLowStockAlert.value = '10';
+  }
   openModal(elements.groceryItemModal);
 };
 
@@ -1489,6 +1549,9 @@ window.openEditModal = function(id) {
   elements.formPrice.value = item.price;
   elements.formOriginalPrice.value = item.originalPrice || '';
   elements.formStock.value = item.stockQuantity;
+  if (elements.formLowStockAlert) {
+    elements.formLowStockAlert.value = item.lowStockAlert !== undefined ? item.lowStockAlert : 10;
+  }
   elements.formRating.value = item.rating;
   elements.formImageUrl.value = item.imageUrl;
   elements.formBadge.value = item.badge || '';
@@ -1511,6 +1574,7 @@ async function handleSaveGrocery(e) {
     price: parseFloat(elements.formPrice.value),
     originalPrice: elements.formOriginalPrice.value ? parseFloat(elements.formOriginalPrice.value) : null,
     stockQuantity: parseInt(elements.formStock.value, 10),
+    lowStockAlert: elements.formLowStockAlert ? parseInt(elements.formLowStockAlert.value, 10) || 10 : 10,
     rating: parseFloat(elements.formRating.value) || 5.0,
     imageUrl: elements.formImageUrl.value.trim(),
     badge: elements.formBadge.value.trim() || null,
@@ -1531,6 +1595,9 @@ async function handleSaveGrocery(e) {
       closeModal(elements.groceryItemModal);
       showToast(state.editingItemId ? 'Item updated successfully!' : 'New grocery item added to catalog!', 'success');
       await refreshData();
+      if (elements.inventoryTableModal && elements.inventoryTableModal.classList.contains('open')) {
+        renderInventoryTable();
+      }
     } else {
       showToast(res.error || 'Failed to save item', 'warning');
     }
