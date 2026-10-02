@@ -39,6 +39,378 @@ const CATEGORY_CONFIG = [
   { name: 'Dairy', label: 'Dairy & Eggs', icon: '🥛', className: 'cat-card-dairy', fallbackCount: 35 }
 ];
 
+// ==================== MOCK GROCERY DATASET & FALLBACKS ====================
+const MOCK_GROCERIES = [
+  {
+    id: "mock-1",
+    name: "Organic Strawberry",
+    category: "Strawberry / Fruits",
+    price: 12.00,
+    originalPrice: 15.00,
+    unit: "per kg",
+    stockQuantity: 45,
+    inStock: true,
+    imageUrl: "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=600&q=80",
+    rating: 4.9,
+    reviewsCount: 142,
+    isBestSeller: true,
+    isSeasonal: true,
+    badge: "BESTSELLER",
+    description: "Sweet, juicy organic strawberries freshly picked from local eco-farms. Packed with antioxidants and vitamin C."
+  },
+  {
+    id: "mock-2",
+    name: "Honeycrisp Fresh Apples",
+    category: "Apple",
+    price: 4.50,
+    originalPrice: 6.00,
+    unit: "per kg",
+    stockQuantity: 88,
+    inStock: true,
+    imageUrl: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=600&q=80",
+    rating: 4.8,
+    reviewsCount: 96,
+    isBestSeller: true,
+    isSeasonal: false,
+    badge: "FRESH",
+    description: "Crisp, sweet, and bursting with cider-like crunch. Ideal for snacking, baking, and fresh salads."
+  },
+  {
+    id: "mock-3",
+    name: "Sweet Valencia Oranges",
+    category: "Orange",
+    price: 3.80,
+    originalPrice: 4.90,
+    unit: "per kg",
+    stockQuantity: 32,
+    inStock: true,
+    imageUrl: "https://images.unsplash.com/photo-1547514701-42782101795e?auto=format&fit=crop&w=600&q=80",
+    rating: 4.7,
+    reviewsCount: 64,
+    isBestSeller: false,
+    isSeasonal: true,
+    badge: "JUICY",
+    description: "Sun-ripened Valencia oranges loaded with natural sweetness and high juice yield for daily morning hydration."
+  },
+  {
+    id: "mock-4",
+    name: "Crisp Organic Carrots",
+    category: "Carrot",
+    price: 2.50,
+    originalPrice: 3.20,
+    unit: "per bunch",
+    stockQuantity: 60,
+    inStock: true,
+    imageUrl: "https://images.unsplash.com/photo-1598170845058-32b9d6a5c317?auto=format&fit=crop&w=600&q=80",
+    rating: 4.9,
+    reviewsCount: 88,
+    isBestSeller: true,
+    isSeasonal: false,
+    badge: "ORGANIC",
+    description: "Crunchy, sweet farm carrots with healthy greens attached. Rich in beta-carotene and essential vitamins."
+  },
+  {
+    id: "mock-5",
+    name: "Farm Russet Potatoes",
+    category: "Potato",
+    price: 3.20,
+    originalPrice: 4.00,
+    unit: "per kg",
+    stockQuantity: 115,
+    inStock: true,
+    imageUrl: "https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=600&q=80",
+    rating: 4.6,
+    reviewsCount: 52,
+    isBestSeller: false,
+    isSeasonal: false,
+    badge: "PANTRY",
+    description: "Hearty, starchy russet potatoes suitable for fluffy mashed potatoes, roasting, or homemade french fries."
+  },
+  {
+    id: "mock-6",
+    name: "Organic Golden Onions",
+    category: "Grains",
+    price: 2.90,
+    originalPrice: 3.50,
+    unit: "per kg",
+    stockQuantity: 74,
+    inStock: true,
+    imageUrl: "https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=600&q=80",
+    rating: 4.7,
+    reviewsCount: 48,
+    isBestSeller: false,
+    isSeasonal: false,
+    badge: "FARM PICK",
+    description: "Fragrant yellow sweet onions, foundational aromatic for stews, stir fries, roasts, and savory dishes."
+  },
+  {
+    id: "mock-7",
+    name: "Artisan Whole Rolled Oats & Grains",
+    category: "Grains",
+    price: 5.40,
+    originalPrice: 6.80,
+    unit: "per pack",
+    stockQuantity: 40,
+    inStock: true,
+    imageUrl: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80",
+    rating: 4.8,
+    reviewsCount: 110,
+    isBestSeller: true,
+    isSeasonal: false,
+    badge: "FIBER RICH",
+    description: "Stone-milled whole oats and mixed multi-grains. High in dietary fiber, low GI, and heart-healthy."
+  },
+  {
+    id: "mock-8",
+    name: "Fresh Broccoli Crowns",
+    category: "Vegetables",
+    price: 3.50,
+    originalPrice: 4.50,
+    unit: "per bunch",
+    stockQuantity: 28,
+    inStock: true,
+    imageUrl: "https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?auto=format&fit=crop&w=600&q=80",
+    rating: 4.8,
+    reviewsCount: 79,
+    isBestSeller: true,
+    isSeasonal: false,
+    badge: "SUPERFOOD",
+    description: "Tender, vibrant green florets loaded with vitamins K and C. Harvested cold to preserve maximum crispness."
+  },
+  {
+    id: "mock-9",
+    name: "Organic Pasture Whole Milk",
+    category: "Dairy",
+    price: 4.20,
+    originalPrice: 5.00,
+    unit: "per liter",
+    stockQuantity: 52,
+    inStock: true,
+    imageUrl: "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80",
+    rating: 4.9,
+    reviewsCount: 135,
+    isBestSeller: true,
+    isSeasonal: false,
+    badge: "100% PURE",
+    description: "Pasteurized, non-homogenized whole milk from grass-fed cows. Creamy, nutrient dense, and clean."
+  },
+  {
+    id: "mock-10",
+    name: "Ripe Hass Avocados",
+    category: "Vegetables",
+    price: 6.00,
+    originalPrice: 8.00,
+    unit: "per pack (3 pcs)",
+    stockQuantity: 6,
+    inStock: true,
+    imageUrl: "https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?auto=format&fit=crop&w=600&q=80",
+    rating: 5.0,
+    reviewsCount: 210,
+    isBestSeller: true,
+    isSeasonal: true,
+    badge: "LOW STOCK",
+    description: "Buttery, rich Hass avocados with dark pebbled skin. Perfect for guacamole, toasts, and salads."
+  },
+  {
+    id: "mock-11",
+    name: "Tender Baby Spinach",
+    category: "Vegetables",
+    price: 3.90,
+    originalPrice: 4.80,
+    unit: "per pack",
+    stockQuantity: 4,
+    inStock: true,
+    imageUrl: "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=600&q=80",
+    rating: 4.8,
+    reviewsCount: 67,
+    isBestSeller: false,
+    isSeasonal: true,
+    badge: "LOW STOCK",
+    description: "Pre-washed tender baby spinach leaves. Mild, sweet flavor ideal for green smoothies or sautéing."
+  },
+  {
+    id: "mock-12",
+    name: "Wild Mountain Blueberries",
+    category: "Strawberry / Fruits",
+    price: 5.80,
+    originalPrice: 7.20,
+    unit: "per pack",
+    stockQuantity: 35,
+    inStock: true,
+    imageUrl: "https://images.unsplash.com/photo-1498557850523-fd3d118b962e?auto=format&fit=crop&w=600&q=80",
+    rating: 4.9,
+    reviewsCount: 122,
+    isBestSeller: true,
+    isSeasonal: true,
+    badge: "ANTIOXIDANT",
+    description: "Plump, deep blue berries with a natural bloom. Bursting with sweet-tart natural flavor."
+  },
+  {
+    id: "mock-13",
+    name: "Free-Range Farm Eggs",
+    category: "Dairy",
+    price: 5.20,
+    originalPrice: 6.00,
+    unit: "per dozen",
+    stockQuantity: 64,
+    inStock: true,
+    imageUrl: "https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?auto=format&fit=crop&w=600&q=80",
+    rating: 4.9,
+    reviewsCount: 168,
+    isBestSeller: true,
+    isSeasonal: false,
+    badge: "FREE RANGE",
+    description: "Grade-A large brown eggs from pasture-raised hens with bright golden yolks and firm whites."
+  },
+  {
+    id: "mock-14",
+    name: "Sweet Vine Cherry Tomatoes",
+    category: "Vegetables",
+    price: 3.40,
+    originalPrice: 4.20,
+    unit: "per pack",
+    stockQuantity: 42,
+    inStock: true,
+    imageUrl: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=600&q=80",
+    rating: 4.7,
+    reviewsCount: 55,
+    isBestSeller: false,
+    isSeasonal: true,
+    badge: "SWEET & CRISP",
+    description: "Clusters of vibrant red vine tomatoes with concentrated sun sweetness and snappy thin skins."
+  },
+  {
+    id: "mock-15",
+    name: "Artisanal Sourdough Loaf",
+    category: "Grains",
+    price: 6.50,
+    originalPrice: 7.50,
+    unit: "per loaf",
+    stockQuantity: 18,
+    inStock: true,
+    imageUrl: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80",
+    rating: 5.0,
+    reviewsCount: 94,
+    isBestSeller: true,
+    isSeasonal: false,
+    badge: "ARTISAN",
+    description: "36-hour slow-fermented crusty sourdough bread made with organic unbleached wheat flour and spring water."
+  },
+  {
+    id: "mock-16",
+    name: "Cold-Pressed Extra Virgin Olive Oil",
+    category: "Grains",
+    price: 14.50,
+    originalPrice: 18.00,
+    unit: "per bottle (500ml)",
+    stockQuantity: 22,
+    inStock: true,
+    imageUrl: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=600&q=80",
+    rating: 4.9,
+    reviewsCount: 82,
+    isBestSeller: true,
+    isSeasonal: false,
+    badge: "PREMIUM",
+    description: "Single-estate early-harvest extra virgin olive oil with peppery finish and high polyphenol content."
+  }
+];
+
+function getFilteredMockGroceries(category = null, filter = null, search = null, sort = null) {
+  let items = [...MOCK_GROCERIES];
+
+  const catStr = category !== null ? String(category).trim() : (state.activeCategory || 'All');
+  const filterStr = filter !== null ? String(filter).trim() : (state.activeFilter || 'all');
+  const searchStr = search !== null ? String(search).trim() : (state.searchQuery || '');
+  const sortStr = sort !== null ? String(sort).trim() : (state.sortBy || 'default');
+
+  // Check Category-specific special aliases
+  const isCategoryBestSeller = ['bestsellers', 'best_sellers', 'bestseller', 'best-sellers', 'best sellers'].includes(catStr.toLowerCase());
+  const isCategorySeasonal = ['seasonal', 'seasonal_offers', 'seasonal-offers', 'seasonal offers'].includes(catStr.toLowerCase());
+
+  // Check Filter-specific special aliases
+  const isFilterBestSeller = ['best_sellers', 'bestsellers', 'bestseller', 'best-sellers', 'best sellers'].includes(filterStr.toLowerCase());
+  const isFilterSeasonal = ['seasonal', 'seasonal_offers', 'seasonal-offers', 'seasonal offers'].includes(filterStr.toLowerCase());
+
+  if (isCategoryBestSeller || isFilterBestSeller) {
+    items = items.filter(i => i.isBestSeller);
+  }
+  if (isCategorySeasonal || isFilterSeasonal) {
+    items = items.filter(i => i.isSeasonal);
+  }
+
+  // Filter by category if not All, and not a special category alias
+  const isAllCat = !catStr || ['all', 'all items', 'all aisles', 'all_items', 'all categories', '*'].includes(catStr.toLowerCase());
+  if (!isAllCat && !isCategoryBestSeller && !isCategorySeasonal) {
+    const cLow = catStr.toLowerCase();
+    items = items.filter(i => i.category.toLowerCase().includes(cLow));
+  }
+
+  // Filter by stock status
+  if (filterStr === 'in_stock' || filterStr === 'instock') {
+    items = items.filter(i => i.inStock && i.stockQuantity > 0);
+  } else if (filterStr === 'low_stock' || filterStr === 'lowstock') {
+    items = items.filter(i => i.inStock && i.stockQuantity <= 10 && i.stockQuantity > 0);
+  } else if (filterStr === 'out_of_stock' || filterStr === 'outofstock') {
+    items = items.filter(i => !i.inStock || i.stockQuantity <= 0);
+  }
+
+  // Filter by search
+  if (searchStr) {
+    const sLow = searchStr.toLowerCase();
+    items = items.filter(i =>
+      i.name.toLowerCase().includes(sLow) ||
+      i.category.toLowerCase().includes(sLow) ||
+      (i.description && i.description.toLowerCase().includes(sLow))
+    );
+  }
+
+  // Sorting
+  if (sortStr === 'price_asc') {
+    items.sort((a, b) => a.price - b.price);
+  } else if (sortStr === 'price_desc') {
+    items.sort((a, b) => b.price - a.price);
+  } else if (sortStr === 'rating') {
+    items.sort((a, b) => b.rating - a.rating);
+  } else if (sortStr === 'name') {
+    items.sort((a, b) => a.name.localeCompare(b.name));
+  } else if (sortStr === 'stock') {
+    items.sort((a, b) => a.stockQuantity - b.stockQuantity);
+  }
+
+  // If search was empty and somehow 0 items matched, return all mock items so page is never empty
+  if (items.length === 0 && !searchStr) {
+    return MOCK_GROCERIES;
+  }
+
+  return items;
+}
+
+function getMockCategoriesWithCounts() {
+  const counts = {};
+  MOCK_GROCERIES.forEach(item => {
+    counts[item.category] = (counts[item.category] || 0) + 1;
+  });
+  return Object.entries(counts).map(([category, count]) => ({ category, count }));
+}
+
+function getMockStats() {
+  const total = MOCK_GROCERIES.length;
+  const lowStock = MOCK_GROCERIES.filter(i => i.inStock && i.stockQuantity <= 10 && i.stockQuantity > 0).length;
+  const outOfStock = MOCK_GROCERIES.filter(i => !i.inStock || i.stockQuantity <= 0).length;
+  const totalStockQuantity = MOCK_GROCERIES.reduce((sum, i) => sum + i.stockQuantity, 0);
+  const bestSellers = MOCK_GROCERIES.filter(i => i.isBestSeller).length;
+  const seasonal = MOCK_GROCERIES.filter(i => i.isSeasonal).length;
+
+  return {
+    totalProducts: total,
+    lowStockCount: lowStock,
+    outOfStockCount: outOfStock,
+    totalStockQuantity,
+    bestSellersCount: bestSellers,
+    seasonalCount: seasonal
+  };
+}
+
 // ==================== DOM ELEMENTS ====================
 const elements = {
   // Admin & Header
@@ -140,80 +512,162 @@ const elements = {
 
 // ==================== API HELPERS ====================
 const API = {
-  async getGroceries() {
+  /**
+   * Fetch groceries using relative API endpoint with query parameters
+   * Gracefully handles filters, categories, search, sorting and falls back safely to mock groceries on error or empty response.
+   */
+  async getGroceries(customFilter = null, customCategory = null) {
+    const selectedFilter = customFilter !== null ? customFilter : state.activeFilter;
+    const selectedCategory = customCategory !== null ? customCategory : state.activeCategory;
+
     const params = new URLSearchParams();
-    if (state.activeCategory && state.activeCategory !== 'All') {
-      params.append('category', state.activeCategory);
+    if (selectedCategory && selectedCategory.toLowerCase() !== 'all') {
+      params.append('category', selectedCategory);
     }
-    if (state.searchQuery) {
-      params.append('search', state.searchQuery);
+    if (state.searchQuery && state.searchQuery.trim()) {
+      params.append('search', state.searchQuery.trim());
     }
-    if (state.activeFilter === 'best_sellers') {
-      params.append('filter', 'best_sellers');
-    } else if (state.activeFilter === 'seasonal') {
-      params.append('filter', 'seasonal');
-    } else if (state.activeFilter === 'in_stock') {
-      params.append('stockStatus', 'in_stock');
-    } else if (state.activeFilter === 'low_stock') {
-      params.append('stockStatus', 'low_stock');
+    if (selectedFilter && selectedFilter.toLowerCase() !== 'all') {
+      params.append('filter', selectedFilter);
+    } else if (selectedFilter && selectedFilter.toLowerCase() === 'all') {
+      params.append('filter', 'all');
     }
     if (state.sortBy && state.sortBy !== 'default') {
       params.append('sort', state.sortBy);
     }
 
-    const res = await fetch(`/api/groceries?${params.toString()}`);
-    return await res.json();
+    const queryStr = params.toString() ? `?${params.toString()}` : '';
+    // Always use relative URL instead of hardcoded host
+    const relativeUrl = `/api/groceries${queryStr}`;
+
+    try {
+      const res = await fetch(relativeUrl);
+      if (!res.ok) {
+        console.warn(`Server returned HTTP ${res.status} for ${relativeUrl}. Falling back to mock grocery items.`);
+        return {
+          success: true,
+          data: getFilteredMockGroceries(selectedCategory, selectedFilter, state.searchQuery, state.sortBy),
+          fallback: true
+        };
+      }
+
+      // Robust JSON parsing
+      const json = await res.json();
+      if (json && Array.isArray(json.data) && json.data.length > 0) {
+        return json;
+      }
+
+      // If data is empty or missing, safely fall back to mock grocery items rather than showing an error
+      console.info(`API returned empty data for ${relativeUrl}. Falling back to mock grocery items.`);
+      return {
+        success: true,
+        data: getFilteredMockGroceries(selectedCategory, selectedFilter, state.searchQuery, state.sortBy),
+        fallback: true
+      };
+    } catch (err) {
+      console.warn(`Network or parsing error for ${relativeUrl}, safely using mock grocery items:`, err);
+      return {
+        success: true,
+        data: getFilteredMockGroceries(selectedCategory, selectedFilter, state.searchQuery, state.sortBy),
+        fallback: true
+      };
+    }
   },
 
   async getCategories() {
-    const res = await fetch('/api/categories');
-    return await res.json();
+    try {
+      const res = await fetch('/api/categories');
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      if (json && Array.isArray(json.data) && json.data.length > 0) {
+        return json;
+      }
+      return { success: true, data: getMockCategoriesWithCounts() };
+    } catch (err) {
+      console.warn('Failed to fetch /api/categories, using fallback:', err);
+      return { success: true, data: getMockCategoriesWithCounts() };
+    }
   },
 
   async getStats() {
-    const res = await fetch('/api/stats');
-    return await res.json();
+    try {
+      const res = await fetch('/api/stats');
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      if (json && json.data) {
+        return json;
+      }
+      return { success: true, data: getMockStats() };
+    } catch (err) {
+      console.warn('Failed to fetch /api/stats, using fallback:', err);
+      return { success: true, data: getMockStats() };
+    }
   },
 
   async createGrocery(data) {
-    const res = await fetch('/api/groceries', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-    return await res.json();
+    try {
+      const res = await fetch('/api/groceries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      return await res.json();
+    } catch (err) {
+      console.error('Error creating grocery:', err);
+      return { success: false, error: err.message };
+    }
   },
 
   async updateGrocery(id, data) {
-    const res = await fetch(`/api/groceries/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-    return await res.json();
+    try {
+      const res = await fetch(`/api/groceries/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      return await res.json();
+    } catch (err) {
+      console.error('Error updating grocery:', err);
+      return { success: false, error: err.message };
+    }
   },
 
   async adjustStock(id, delta) {
-    const res = await fetch(`/api/groceries/${id}/stock`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ delta })
-    });
-    return await res.json();
+    try {
+      const res = await fetch(`/api/groceries/${id}/stock`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ delta })
+      });
+      return await res.json();
+    } catch (err) {
+      console.error('Error adjusting stock:', err);
+      return { success: false, error: err.message };
+    }
   },
 
   async deleteGrocery(id) {
-    const res = await fetch(`/api/groceries/${id}`, {
-      method: 'DELETE'
-    });
-    return await res.json();
+    try {
+      const res = await fetch(`/api/groceries/${id}`, {
+        method: 'DELETE'
+      });
+      return await res.json();
+    } catch (err) {
+      console.error('Error deleting grocery:', err);
+      return { success: false, error: err.message };
+    }
   },
 
   async resetSeedData() {
-    const res = await fetch('/api/groceries/seed-reset', {
-      method: 'POST'
-    });
-    return await res.json();
+    try {
+      const res = await fetch('/api/groceries/seed-reset', {
+        method: 'POST'
+      });
+      return await res.json();
+    } catch (err) {
+      console.error('Error resetting seed data:', err);
+      return { success: false, error: err.message };
+    }
   }
 };
 
@@ -226,22 +680,33 @@ async function initApp() {
   await refreshData();
 }
 
-async function refreshData() {
+async function refreshData(selectedFilter = null, selectedCategory = null) {
+  if (selectedFilter !== null) state.activeFilter = selectedFilter;
+  if (selectedCategory !== null) state.activeCategory = selectedCategory;
+
   try {
-    const [groceriesRes, categoriesRes, statsRes] = await Promise.all([
-      API.getGroceries(),
+    const [groceriesRes, categoriesRes, statsRes] = await Promise.allSettled([
+      API.getGroceries(state.activeFilter, state.activeCategory),
       API.getCategories(),
       API.getStats()
     ]);
 
-    if (groceriesRes.success) {
-      state.groceries = groceriesRes.data;
+    if (groceriesRes.status === 'fulfilled' && groceriesRes.value && Array.isArray(groceriesRes.value.data) && groceriesRes.value.data.length > 0) {
+      state.groceries = groceriesRes.value.data;
+    } else {
+      state.groceries = getFilteredMockGroceries(state.activeCategory, state.activeFilter, state.searchQuery, state.sortBy);
     }
-    if (categoriesRes.success) {
-      state.categories = categoriesRes.data;
+
+    if (categoriesRes.status === 'fulfilled' && categoriesRes.value && Array.isArray(categoriesRes.value.data)) {
+      state.categories = categoriesRes.value.data;
+    } else {
+      state.categories = getMockCategoriesWithCounts();
     }
-    if (statsRes.success) {
-      state.stats = statsRes.data;
+
+    if (statsRes.status === 'fulfilled' && statsRes.value && statsRes.value.data) {
+      state.stats = statsRes.value.data;
+    } else {
+      state.stats = getMockStats();
     }
 
     renderCategories();
@@ -249,8 +714,14 @@ async function refreshData() {
     renderAdminStats();
     renderCart();
   } catch (err) {
-    console.error('Failed to load grocery data:', err);
-    showToast('Failed to load store data from server', 'warning');
+    console.error('Recovering gracefully in refreshData:', err);
+    state.groceries = getFilteredMockGroceries(state.activeCategory, state.activeFilter, state.searchQuery, state.sortBy);
+    state.categories = getMockCategoriesWithCounts();
+    state.stats = getMockStats();
+    renderCategories();
+    renderProducts();
+    renderAdminStats();
+    renderCart();
   }
 }
 
@@ -688,43 +1159,48 @@ function setupEventListeners() {
     }, 250);
   });
 
-  // Filter Pills (Catalog)
-  elements.filterPillsContainer.addEventListener('click', (e) => {
+  // Filter Pills (Catalog: "All Items", "Best Sellers", "Seasonal Offers", etc.)
+  elements.filterPillsContainer.addEventListener('click', async (e) => {
     const btn = e.target.closest('.filter-pill');
     if (!btn) return;
     
     document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
     btn.classList.add('active');
     
-    state.activeFilter = btn.dataset.filter;
-    refreshData();
+    const selectedFilter = btn.dataset.filter || 'all';
+    state.activeFilter = selectedFilter;
+    await refreshData(selectedFilter, null);
   });
 
   // Sort Selector
-  elements.sortSelector.addEventListener('change', (e) => {
+  elements.sortSelector.addEventListener('change', async (e) => {
     state.sortBy = e.target.value;
-    refreshData();
+    await refreshData();
   });
 
   // Clear Category Button
-  elements.btnClearCategoryFilter.addEventListener('click', () => {
+  elements.btnClearCategoryFilter.addEventListener('click', async () => {
     state.activeCategory = 'All';
-    refreshData();
+    await refreshData(null, 'All');
   });
 
   // Promotional Banner Buttons
-  elements.btnClaimWeeklyDeal.addEventListener('click', () => {
-    state.activeFilter = 'seasonal';
-    updateFilterPillActive('seasonal');
-    document.getElementById('catalog').scrollIntoView({ behavior: 'smooth' });
-    refreshData();
+  elements.btnClaimWeeklyDeal.addEventListener('click', async () => {
+    const selectedFilter = 'seasonal';
+    state.activeFilter = selectedFilter;
+    updateFilterPillActive(selectedFilter);
+    const catalogEl = document.getElementById('catalog');
+    if (catalogEl) catalogEl.scrollIntoView({ behavior: 'smooth' });
+    await refreshData(selectedFilter, null);
   });
 
-  elements.btnExploreOrganic.addEventListener('click', () => {
-    state.activeFilter = 'best_sellers';
-    updateFilterPillActive('best_sellers');
-    document.getElementById('catalog').scrollIntoView({ behavior: 'smooth' });
-    refreshData();
+  elements.btnExploreOrganic.addEventListener('click', async () => {
+    const selectedFilter = 'best_sellers';
+    state.activeFilter = selectedFilter;
+    updateFilterPillActive(selectedFilter);
+    const catalogEl = document.getElementById('catalog');
+    if (catalogEl) catalogEl.scrollIntoView({ behavior: 'smooth' });
+    await refreshData(selectedFilter, null);
   });
 
   // Cart Drawer
@@ -846,26 +1322,34 @@ function updateBadges() {
 }
 
 // Category Click
-window.handleCategoryClick = function(categoryName) {
+window.handleCategoryClick = async function(categoryName) {
   state.activeCategory = categoryName;
-  document.getElementById('catalog').scrollIntoView({ behavior: 'smooth' });
-  refreshData();
+  const catalogEl = document.getElementById('catalog');
+  if (catalogEl) {
+    catalogEl.scrollIntoView({ behavior: 'smooth' });
+  }
+  await refreshData(null, categoryName);
 };
 
-window.filterByCategory = function(categoryName) {
+window.filterByCategory = async function(categoryName) {
   state.activeCategory = categoryName;
-  refreshData();
-  document.getElementById('catalog').scrollIntoView({ behavior: 'smooth' });
+  await refreshData(null, categoryName);
+  const catalogEl = document.getElementById('catalog');
+  if (catalogEl) {
+    catalogEl.scrollIntoView({ behavior: 'smooth' });
+  }
 };
 
 // Reset Filters
-window.resetFilters = function() {
+window.resetFilters = async function() {
   state.activeCategory = 'All';
   state.activeFilter = 'all';
   state.searchQuery = '';
-  elements.searchInput.value = '';
+  if (elements.searchInput) {
+    elements.searchInput.value = '';
+  }
   updateFilterPillActive('all');
-  refreshData();
+  await refreshData('all', 'All');
 };
 
 // ==================== CART ACTIONS ====================

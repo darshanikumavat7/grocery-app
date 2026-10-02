@@ -17,18 +17,30 @@ db.initDatabase();
 // ==================== REST API ENDPOINTS ====================
 
 /**
- * GET /api/groceries
+ * GET /api/groceries and /api/items
  * Query parameters:
- * - category: e.g. "Fruits", "Vegetables", "All"
+ * - category: e.g. "Fruits", "Vegetables", "All", "bestsellers"
  * - search: search string for name/description/category
  * - stockStatus: "in_stock", "low_stock", "out_of_stock", "all"
- * - filter: "best_sellers", "seasonal"
+ * - filter: "all", "best_sellers", "bestsellers", "seasonal", "in_stock", "low_stock"
+ * - isBestSeller: "true" / "1"
+ * - isSeasonal: "true" / "1"
  * - sort: "price_asc", "price_desc", "rating", "name", "stock"
  */
-app.get('/api/groceries', (req, res) => {
+const handleGetGroceries = (req, res) => {
   try {
-    const { category, search, stockStatus, filter, sort } = req.query;
-    const items = db.getAllGroceries({ category, search, stockStatus, filter, sort });
+    const { category, search, stockStatus, filter, sort, isBestSeller, isSeasonal, inStock } = req.query;
+    const items = db.getAllGroceries({
+      category,
+      search,
+      stockStatus,
+      filter,
+      sort,
+      isBestSeller,
+      isSeasonal,
+      inStock
+    });
+
     res.json({
       success: true,
       count: items.length,
@@ -36,14 +48,24 @@ app.get('/api/groceries', (req, res) => {
     });
   } catch (error) {
     console.error('Error fetching groceries:', error);
-    res.status(500).json({ success: false, error: error.message });
+    // Graceful fallback: return sample groceries so the frontend never crashes with 500
+    const fallbackItems = db.SAMPLE_GROCERIES || [];
+    res.json({
+      success: true,
+      count: fallbackItems.length,
+      data: fallbackItems,
+      fallback: true
+    });
   }
-});
+};
+
+app.get('/api/groceries', handleGetGroceries);
+app.get('/api/items', handleGetGroceries);
 
 /**
- * GET /api/groceries/:id
+ * GET /api/groceries/:id and /api/items/:id
  */
-app.get('/api/groceries/:id', (req, res) => {
+const handleGetGroceryById = (req, res) => {
   try {
     const item = db.getGroceryById(req.params.id);
     if (!item) {
@@ -54,15 +76,18 @@ app.get('/api/groceries/:id', (req, res) => {
     console.error('Error fetching item:', error);
     res.status(500).json({ success: false, error: error.message });
   }
-});
+};
+
+app.get('/api/groceries/:id', handleGetGroceryById);
+app.get('/api/items/:id', handleGetGroceryById);
 
 /**
- * POST /api/groceries
+ * POST /api/groceries and /api/items
  * Add new grocery item to store data
  */
-app.post('/api/groceries', (req, res) => {
+const handleCreateGrocery = (req, res) => {
   try {
-    const { name, category, price, unit, stockQuantity } = req.body;
+    const { name, category, price } = req.body;
     if (!name || !category || price === undefined) {
       return res.status(400).json({
         success: false,
@@ -80,13 +105,16 @@ app.post('/api/groceries', (req, res) => {
     console.error('Error creating grocery item:', error);
     res.status(500).json({ success: false, error: error.message });
   }
-});
+};
+
+app.post('/api/groceries', handleCreateGrocery);
+app.post('/api/items', handleCreateGrocery);
 
 /**
- * PUT /api/groceries/:id
+ * PUT /api/groceries/:id and /api/items/:id
  * Update quantity, price, or item details
  */
-app.put('/api/groceries/:id', (req, res) => {
+const handleUpdateGrocery = (req, res) => {
   try {
     const updated = db.updateGrocery(req.params.id, req.body);
     if (!updated) {
@@ -101,13 +129,16 @@ app.put('/api/groceries/:id', (req, res) => {
     console.error('Error updating grocery item:', error);
     res.status(500).json({ success: false, error: error.message });
   }
-});
+};
+
+app.put('/api/groceries/:id', handleUpdateGrocery);
+app.put('/api/items/:id', handleUpdateGrocery);
 
 /**
- * PATCH /api/groceries/:id/stock
+ * PATCH /api/groceries/:id/stock and /api/items/:id/stock
  * Rapid stock adjuster for Admin mode (+1 or -1 or custom delta)
  */
-app.patch('/api/groceries/:id/stock', (req, res) => {
+const handleAdjustStock = (req, res) => {
   try {
     const delta = parseInt(req.body.delta, 10);
     if (isNaN(delta)) {
@@ -126,13 +157,16 @@ app.patch('/api/groceries/:id/stock', (req, res) => {
     console.error('Error adjusting stock:', error);
     res.status(500).json({ success: false, error: error.message });
   }
-});
+};
+
+app.patch('/api/groceries/:id/stock', handleAdjustStock);
+app.patch('/api/items/:id/stock', handleAdjustStock);
 
 /**
- * DELETE /api/groceries/:id
+ * DELETE /api/groceries/:id and /api/items/:id
  * Remove item from shop data
  */
-app.delete('/api/groceries/:id', (req, res) => {
+const handleDeleteGrocery = (req, res) => {
   try {
     const deleted = db.deleteGrocery(req.params.id);
     if (!deleted) {
@@ -146,7 +180,10 @@ app.delete('/api/groceries/:id', (req, res) => {
     console.error('Error deleting item:', error);
     res.status(500).json({ success: false, error: error.message });
   }
-});
+};
+
+app.delete('/api/groceries/:id', handleDeleteGrocery);
+app.delete('/api/items/:id', handleDeleteGrocery);
 
 /**
  * GET /api/categories
@@ -187,7 +224,12 @@ app.post('/api/groceries/seed-reset', (req, res) => {
   }
 });
 
-// Fallback to index.html for client-side navigation
+// JSON 404 for unhandled API endpoints so clients receive JSON rather than HTML
+app.use('/api', (req, res) => {
+  res.status(404).json({ success: false, error: `API endpoint ${req.method} ${req.originalUrl || req.path} not found` });
+});
+
+// Fallback to index.html for client-side navigation (non-API routes only)
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });

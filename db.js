@@ -340,64 +340,152 @@ function resetSampleData() {
   return { success: true, count: SAMPLE_GROCERIES.length };
 }
 
+// Fallback in-memory filter in case of sqlite errors
+function getFallbackFilteredGroceries(filters = {}) {
+  let items = SAMPLE_GROCERIES.map((item, index) => ({
+    ...item,
+    id: `sample-${index + 1}`,
+    inStock: Boolean(item.stockQuantity > 0),
+    isBestSeller: Boolean(item.isBestSeller),
+    isSeasonal: Boolean(item.isSeasonal),
+    createdAt: new Date().toISOString()
+  }));
+
+  const rawCategory = filters.category !== undefined && filters.category !== null ? String(filters.category).trim() : '';
+  const rawFilter = filters.filter !== undefined && filters.filter !== null ? String(filters.filter).trim() : '';
+  const rawSearch = filters.search !== undefined && filters.search !== null ? String(filters.search).trim() : '';
+  const rawStockStatus = filters.stockStatus !== undefined && filters.stockStatus !== null ? String(filters.stockStatus).trim() : '';
+  const isBestSellerFlag = filters.isBestSeller === true || filters.isBestSeller === 'true' || filters.isBestSeller === 1 || filters.isBestSeller === '1';
+  const isSeasonalFlag = filters.isSeasonal === true || filters.isSeasonal === 'true' || filters.isSeasonal === 1 || filters.isSeasonal === '1';
+  const inStockFlag = filters.inStock === true || filters.inStock === 'true' || filters.inStock === 1 || filters.inStock === '1';
+
+  const isCategoryBestSeller = ['bestsellers', 'best_sellers', 'bestseller', 'best-sellers', 'best sellers'].includes(rawCategory.toLowerCase());
+  const isCategorySeasonal = ['seasonal', 'seasonal_offers', 'seasonal-offers', 'seasonal offers'].includes(rawCategory.toLowerCase());
+
+  const isFilterBestSeller = ['bestsellers', 'best_sellers', 'bestseller', 'best-sellers', 'best sellers'].includes(rawFilter.toLowerCase());
+  const isFilterSeasonal = ['seasonal', 'seasonal_offers', 'seasonal-offers', 'seasonal offers'].includes(rawFilter.toLowerCase());
+
+  if (isBestSellerFlag || isCategoryBestSeller || isFilterBestSeller) {
+    items = items.filter(item => item.isBestSeller);
+  }
+
+  if (isSeasonalFlag || isCategorySeasonal || isFilterSeasonal) {
+    items = items.filter(item => item.isSeasonal);
+  }
+
+  const isAllCategory = !rawCategory || ['all', 'all items', 'all aisles', 'all_items', 'all categories', '*'].includes(rawCategory.toLowerCase());
+
+  if (!isAllCategory && !isCategoryBestSeller && !isCategorySeasonal) {
+    const catLower = rawCategory.toLowerCase();
+    items = items.filter(item => item.category.toLowerCase().includes(catLower));
+  }
+
+  if (inStockFlag || rawStockStatus === 'in_stock' || rawFilter === 'in_stock' || rawFilter === 'instock') {
+    items = items.filter(item => item.inStock && item.stockQuantity > 0);
+  } else if (rawStockStatus === 'low_stock' || rawFilter === 'low_stock' || rawFilter === 'lowstock') {
+    items = items.filter(item => item.inStock && item.stockQuantity <= 10 && item.stockQuantity > 0);
+  } else if (rawStockStatus === 'out_of_stock' || rawFilter === 'out_of_stock' || rawFilter === 'outofstock') {
+    items = items.filter(item => !item.inStock || item.stockQuantity <= 0);
+  }
+
+  if (rawSearch) {
+    const searchLower = rawSearch.toLowerCase();
+    items = items.filter(item =>
+      (item.name && item.name.toLowerCase().includes(searchLower)) ||
+      (item.category && item.category.toLowerCase().includes(searchLower)) ||
+      (item.description && item.description.toLowerCase().includes(searchLower))
+    );
+  }
+
+  return items;
+}
+
 // Queries
 function getAllGroceries(filters = {}) {
-  let query = 'SELECT * FROM groceries WHERE 1=1';
-  const params = [];
+  try {
+    let query = 'SELECT * FROM groceries WHERE 1=1';
+    const params = [];
 
-  if (filters.category && filters.category !== 'All') {
-    query += ' AND category = ?';
-    params.push(filters.category);
-  }
+    // Normalize parameter inputs safely
+    const rawCategory = filters && filters.category !== undefined && filters.category !== null ? String(filters.category).trim() : '';
+    const rawFilter = filters && filters.filter !== undefined && filters.filter !== null ? String(filters.filter).trim() : '';
+    const rawSearch = filters && filters.search !== undefined && filters.search !== null ? String(filters.search).trim() : '';
+    const rawStockStatus = filters && filters.stockStatus !== undefined && filters.stockStatus !== null ? String(filters.stockStatus).trim() : '';
+    const rawSort = filters && filters.sort !== undefined && filters.sort !== null ? String(filters.sort).trim() : '';
 
-  if (filters.search && filters.search.trim()) {
-    query += ' AND (name LIKE ? OR category LIKE ? OR description LIKE ?)';
-    const term = `%${filters.search.trim()}%`;
-    params.push(term, term, term);
-  }
+    // Boolean flags
+    const isBestSellerFlag = filters && (filters.isBestSeller === true || filters.isBestSeller === 'true' || filters.isBestSeller === 1 || filters.isBestSeller === '1');
+    const isSeasonalFlag = filters && (filters.isSeasonal === true || filters.isSeasonal === 'true' || filters.isSeasonal === 1 || filters.isSeasonal === '1');
+    const inStockFlag = filters && (filters.inStock === true || filters.inStock === 'true' || filters.inStock === 1 || filters.inStock === '1');
 
-  if (filters.stockStatus) {
-    if (filters.stockStatus === 'in_stock') {
-      query += ' AND inStock = 1 AND stockQuantity > 0';
-    } else if (filters.stockStatus === 'low_stock') {
-      query += ' AND inStock = 1 AND stockQuantity <= 10 AND stockQuantity > 0';
-    } else if (filters.stockStatus === 'out_of_stock') {
-      query += ' AND (inStock = 0 OR stockQuantity <= 0)';
-    }
-  }
+    const isCategoryBestSeller = ['bestsellers', 'best_sellers', 'bestseller', 'best-sellers', 'best sellers'].includes(rawCategory.toLowerCase());
+    const isCategorySeasonal = ['seasonal', 'seasonal_offers', 'seasonal-offers', 'seasonal offers'].includes(rawCategory.toLowerCase());
 
-  if (filters.filter) {
-    if (filters.filter === 'best_sellers') {
+    const isFilterBestSeller = ['bestsellers', 'best_sellers', 'bestseller', 'best-sellers', 'best sellers'].includes(rawFilter.toLowerCase());
+    const isFilterSeasonal = ['seasonal', 'seasonal_offers', 'seasonal-offers', 'seasonal offers'].includes(rawFilter.toLowerCase());
+
+    // 1. Handle Best Seller filter: e.g. ?isBestSeller=true, ?filter=best_sellers, ?category=bestsellers
+    if (isBestSellerFlag || isCategoryBestSeller || isFilterBestSeller) {
       query += ' AND isBestSeller = 1';
-    } else if (filters.filter === 'seasonal') {
+    }
+
+    // 2. Handle Seasonal filter: e.g. ?isSeasonal=true, ?filter=seasonal, ?category=seasonal
+    if (isSeasonalFlag || isCategorySeasonal || isFilterSeasonal) {
       query += ' AND isSeasonal = 1';
     }
-  }
 
-  // Sorting
-  if (filters.sort === 'price_asc') {
-    query += ' ORDER BY price ASC';
-  } else if (filters.sort === 'price_desc') {
-    query += ' ORDER BY price DESC';
-  } else if (filters.sort === 'rating') {
-    query += ' ORDER BY rating DESC';
-  } else if (filters.sort === 'name') {
-    query += ' ORDER BY name ASC';
-  } else if (filters.sort === 'stock') {
-    query += ' ORDER BY stockQuantity ASC';
-  } else {
-    // Default: Best sellers first, then recently added
-    query += ' ORDER BY isBestSeller DESC, createdAt DESC';
-  }
+    // 3. Handle Category filter (if not already handled as special best sellers/seasonal alias)
+    const isAllCategory = !rawCategory || ['all', 'all items', 'all aisles', 'all_items', 'all categories', '*'].includes(rawCategory.toLowerCase());
 
-  const rows = db.prepare(query).all(...params);
-  // Transform sqlite 1/0 integers to booleans
-  return rows.map(r => ({
-    ...r,
-    inStock: Boolean(r.inStock),
-    isBestSeller: Boolean(r.isBestSeller),
-    isSeasonal: Boolean(r.isSeasonal)
-  }));
+    if (!isAllCategory && !isCategoryBestSeller && !isCategorySeasonal) {
+      // Support exact, partial and case-insensitive matching (e.g. "Fruits" -> "Strawberry / Fruits")
+      query += ' AND (LOWER(category) = LOWER(?) OR category LIKE ?)';
+      params.push(rawCategory, `%${rawCategory}%`);
+    }
+
+    // 4. Handle Stock Status
+    if (inStockFlag || rawStockStatus === 'in_stock' || rawFilter === 'in_stock' || rawFilter === 'instock') {
+      query += ' AND inStock = 1 AND stockQuantity > 0';
+    } else if (rawStockStatus === 'low_stock' || rawFilter === 'low_stock' || rawFilter === 'lowstock') {
+      query += ' AND inStock = 1 AND stockQuantity <= 10 AND stockQuantity > 0';
+    } else if (rawStockStatus === 'out_of_stock' || rawFilter === 'out_of_stock' || rawFilter === 'outofstock') {
+      query += ' AND (inStock = 0 OR stockQuantity <= 0)';
+    }
+
+    // 5. Handle Search
+    if (rawSearch) {
+      query += ' AND (name LIKE ? OR category LIKE ? OR description LIKE ?)';
+      const term = `%${rawSearch}%`;
+      params.push(term, term, term);
+    }
+
+    // 6. Sorting
+    if (rawSort === 'price_asc') {
+      query += ' ORDER BY price ASC';
+    } else if (rawSort === 'price_desc') {
+      query += ' ORDER BY price DESC';
+    } else if (rawSort === 'rating') {
+      query += ' ORDER BY rating DESC';
+    } else if (rawSort === 'name') {
+      query += ' ORDER BY name ASC';
+    } else if (rawSort === 'stock') {
+      query += ' ORDER BY stockQuantity ASC';
+    } else {
+      // Default: Best sellers first, then recently added
+      query += ' ORDER BY isBestSeller DESC, createdAt DESC';
+    }
+
+    const rows = db.prepare(query).all(...params);
+    return rows.map(r => ({
+      ...r,
+      inStock: Boolean(r.inStock),
+      isBestSeller: Boolean(r.isBestSeller),
+      isSeasonal: Boolean(r.isSeasonal)
+    }));
+  } catch (error) {
+    console.error('Error executing query in getAllGroceries, falling back to safe sample data:', error);
+    return getFallbackFilteredGroceries(filters);
+  }
 }
 
 function getGroceryById(id) {
@@ -564,6 +652,7 @@ function getStats() {
 }
 
 module.exports = {
+  SAMPLE_GROCERIES,
   initDatabase,
   getAllGroceries,
   getGroceryById,
